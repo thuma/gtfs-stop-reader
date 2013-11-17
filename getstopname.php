@@ -3,13 +3,12 @@
 // Test row:
 // print json_encode(getClosestStations(57.947082690244,14.047643900878));
 
-function getClosestStation($latitude, $longitude, $maxdist = 100){
-	$handle = fopen("gtfs-stop-reader/stops.txt", "r");
-	$head = preg_split('/,/',$buffer = fgets($handle, 4096));
-	$closest = new stdClass;
-	$closest->distance = $maxdist;
-	$closest->error = "No stop found.";
-	while (($buffer = fgets($handle, 4096)) !== false)
+// Store alla stations in memory for later access:
+$handle = fopen("gtfs-stop-reader/stops.txt", "r");
+$head = preg_split('/,/',$buffer = fgets($handle, 4096));
+$allstops = array();
+
+while (($buffer = fgets($handle, 4096)) !== false)
 		{
 		$data = preg_split('/,/',$buffer);
 		$row = new stdClass;
@@ -17,16 +16,27 @@ function getClosestStation($latitude, $longitude, $maxdist = 100){
 			{
 			$row->{$head[$no]} = $col;
 			}
+	    $allstops[] = $row;
+ 	   }
+fclose($handle);
+
+// Get the closest station:
+function getClosestStation($latitude, $longitude, $maxdist = 100){
+	global $allstops;
+
+	$closest = new stdClass;
+	$closest->distance = $maxdist;
+	$closest->error = "No stop found.";
+	foreach($allstops as $row){
 		$row->distance = getDistance($latitude, $longitude, floatval($row->stop_lat), floatval($row->stop_lon));
 		if($row->distance < $closest->distance ){
 			$closest = $row;
 		}
  	   }
-	fclose($handle);
-	
 	return $closest;
 }
 
+// Calculate closest distanse.
 function getDistance($latitude1, $longitude1, $latitude2, $longitude2) {  
     $earth_radius = 6371;  
       
