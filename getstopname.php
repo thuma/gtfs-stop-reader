@@ -27,11 +27,17 @@ function getClosestStation($latitude, $longitude, $maxdist = 100){
 	$closest = new stdClass;
 	$closest->distance = $maxdist;
 	$closest->error = "No stop found.";
-	foreach($allstops as $row){
-		$row->distance = getDistance($latitude, $longitude, floatval($row->stop_lat), floatval($row->stop_lon));
-		if($row->distance < $closest->distance ){
-			$closest = $row;
-		}
+	foreach($allstops as $row ){
+	// Convert to float:
+	$row->stop_lat = floatval($row->stop_lat);
+	$row->stop_lon = floatval($row->stop_lon);
+		if(abs($latitude - $row->stop_lat) < 0.2 AND abs($longitude - $row->stop_lon) < 0.2 ){
+			$row->distance = getDistance($latitude, $longitude, $row->stop_lat, $row->stop_lon);
+			if($row->distance < $closest->distance )
+				{
+				$closest = $row;
+				}
+			}
  	   }
 	return $closest;
 }
