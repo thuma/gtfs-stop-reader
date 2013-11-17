@@ -37,6 +37,7 @@ function getClosestStation($latitude, $longitude, $maxdist = 100){
 }
 
 // Calculate closest distanse.
+// Code from: http://www.codecodex.com/wiki/Calculate_distance_between_two_points_on_a_globe
 function getDistance($latitude1, $longitude1, $latitude2, $longitude2) {  
     $earth_radius = 6371;  
       
