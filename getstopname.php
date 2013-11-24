@@ -21,16 +21,22 @@ while (($buffer = fgets($handle, 4096)) !== false)
 fclose($handle);
 
 // Get the closest station:
-function getClosestStation($latitude, $longitude, $maxdist = 100){
+function getClosestStation($latitude, $longitude, $maxdist = 100, $maxstations = 9999999){
 	global $allstops;
 
 	$closest = new stdClass;
 	$closest->distance = $maxdist;
 	$closest->error = "No stop found.";
-	foreach($allstops as $row ){
-	// Convert to float:
-	$row->stop_lat = floatval($row->stop_lat);
-	$row->stop_lon = floatval($row->stop_lon);
+	$closest->stop_name="not found";
+	foreach($allstops as $row )
+		{
+		if(intval($row->stop_id) > $maxstations)
+			{
+			continue;
+			}
+		// Convert to float:
+		$row->stop_lat = floatval($row->stop_lat);
+		$row->stop_lon = floatval($row->stop_lon);
 		if(abs($latitude - $row->stop_lat) < 0.2 AND abs($longitude - $row->stop_lon) < 0.2 ){
 			$row->distance = getDistance($latitude, $longitude, $row->stop_lat, $row->stop_lon);
 			if($row->distance < $closest->distance )
@@ -38,8 +44,8 @@ function getClosestStation($latitude, $longitude, $maxdist = 100){
 				$closest = $row;
 				}
 			}
- 	   }
-	return $closest;
+		}
+		return $closest;
 }
 
 // Calculate closest distanse.
