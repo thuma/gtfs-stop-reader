@@ -9,21 +9,23 @@ trips = {}
 with open('sweden/trips.txt', 'r') as f:
     reader = csv.reader(f)
     for row in reader:
-        trips[row[2]] = re.sub('_|[0-9]', '', row[0])
+	if not row[0] == 'route_id':
+        	trips[row[2]] = re.sub('_|[0-9]', '', row[0])
 
 stops = {}
 types = {}
 with open('sweden/stop_times.txt', 'r') as f:
     reader = csv.reader(f) 
     for row in reader:
-	try:
-		if not row[3] in stops:
-			stops[row[3]] = {}
-			stops[row[3]]['id'] = row[3]
-		stops[row[3]][trips[row[0]]] = 1
-		types[trips[row[0]]] = trips[row[0]]
-	except:
-		print 'Hoppar rubrikrader'
+	if not row[0] == 'trip_id':
+		try:
+			if not row[3] in stops:
+				stops[row[3]] = {}
+				stops[row[3]]['id'] = row[3]
+			stops[row[3]][trips[row[0]]] = 1
+			types[trips[row[0]]] = trips[row[0]]
+		except:
+			print 'Hoppar rubrikrader'
 
 f = open('travelmodes.csv','w')
 
