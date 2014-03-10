@@ -54,7 +54,7 @@ for row in stops:
 		if typ in stops[row]:
 			f.write(',1')
 		else:
-			f.write(',0')
+			f.write(',')
 	f.write('\n')
 f.close()
 
