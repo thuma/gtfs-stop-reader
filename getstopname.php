@@ -6,7 +6,9 @@
 // Store alla stations in memory for later access:
 $handle = fopen("gtfs-stop-reader/stops.txt", "r");
 $head = preg_split('/,/',$buffer = fgets($handle, 4096));
+
 $allstops = array();
+$allstopsdata = array();
 
 while (($buffer = fgets($handle, 4096)) !== false)
 		{
@@ -20,9 +22,27 @@ while (($buffer = fgets($handle, 4096)) !== false)
  	   }
 fclose($handle);
 
+$handle = fopen("gtfs-stop-reader/travelmodes.cvs", "r");
+$head = preg_split('/,/',$buffer = fgets($handle, 4096));
+while (($buffer = fgets($handle, 4096)) !== false)
+	{
+	$data = preg_split('/,/',$buffer);
+	$row = new stdClass;
+	foreach($data as $no => $col)
+		{
+		$row->{$head[$no]} = $col;
+		}
+    $allstopsdata[$row->ID] = $row;
+   }
+fclose($handle);
+}
+
+
+
 // Get the closest station:
-function getClosestStation($latitude, $longitude, $maxdist = 100, $maxstations = 9999999){
+function getClosestStation($latitude, $longitude, $maxdist = 100, $maxstations = 9999999, $coltype="all"){
 	global $allstops;
+	global $allstopsdata;
 
 	$closest = new stdClass;
 	$closest->distance = $maxdist;
@@ -36,8 +56,13 @@ function getClosestStation($latitude, $longitude, $maxdist = 100, $maxstations =
 			}
 		// Convert to float:
 		$row->stop_lat = floatval($row->stop_lat);
-		$row->stop_lon = floatval($row->stop_lon);
-		if(abs($latitude - $row->stop_lat) < 0.2 AND abs($longitude - $row->stop_lon) < 0.2 ){
+		$row->stop_lon = floatval($row->stop_lon);		
+		$do = false;		
+		if($coltype=='all'){$do = true;}
+		elseif($allstopsdata[$row->stop_id]->{$coltype}=='1')
+			{$do = true;}
+
+		if(abs($latitude - $row->stop_lat) < 0.2 AND abs($longitude - $row->stop_lon) < 0.2 AND $do){
 			$row->distance = getDistance($latitude, $longitude, $row->stop_lat, $row->stop_lon);
 			if($row->distance < $closest->distance )
 				{
