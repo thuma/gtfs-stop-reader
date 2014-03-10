@@ -58,7 +58,7 @@ function getClosestStation($latitude, $longitude, $maxdist = 100, $maxstations =
 		$row->stop_lon = floatval($row->stop_lon);		
 		$do = false;		
 		if($coltype=='all'){$do = true;}
-		elseif(isset($allstopsdata[$row->stop_id]->{$coltype}))
+		elseif($allstopsdata[$row->stop_id]->{$coltype}=='1')
 			{$do = true;}
 
 		if(abs($latitude - $row->stop_lat) < 0.2 AND abs($longitude - $row->stop_lon) < 0.2 AND $do){
