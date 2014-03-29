@@ -8,14 +8,14 @@ import re
 
 trips = {}
 ftrips = {}
-with open('sweden/trips.txt', 'r') as f:
+with open('../sweden/trips.txt', 'r') as f:
     reader = csv.reader(f)
     for row in reader:
 	if not row[0] == 'route_id':
        		trips[row[2]] = re.sub('_|[0-9]', '', row[0])
 		ftrips[row[2]] = row
 route = {}
-with open('sweden/routes.txt', 'r') as f:
+with open('../sweden/routes.txt', 'r') as f:
     reader = csv.reader(f)
     for row in reader:
 	if not row[0] == 'route_id':
@@ -23,7 +23,7 @@ with open('sweden/routes.txt', 'r') as f:
 
 stops = {}
 types = {}
-with open('sweden/stop_times.txt', 'r') as f:
+with open('../sweden/stop_times.txt', 'r') as f:
     reader = csv.reader(f) 
     for row in reader:
 	if not row[0] == 'trip_id':
