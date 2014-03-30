@@ -4,7 +4,7 @@
 // print json_encode(getClosestStations(57.947082690244,14.047643900878));
 
 // Store alla stations in memory for later access:
-$handle = fopen("gtfs-stop-reader/stops.txt", "r");
+$handle = fopen("../sweden/stops.txt", "r");
 $head = preg_split('/,/',$buffer = fgets($handle, 4096));
 
 $allstops = array();
