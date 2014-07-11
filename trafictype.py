@@ -1,10 +1,5 @@
 import csv
 import re
-#with open('sweden/trips.txt', 'r') as f:
-#    reader = csv.reader(f)
-#    for row in reader:
-#        print row
-# https://api.trafiklab.se/samtrafiken/gtfs/sweden.zip?key=wItxkyLvncTsCYzXUwADmAIAvX4kWPES
 
 trips = {}
 ftrips = {}
